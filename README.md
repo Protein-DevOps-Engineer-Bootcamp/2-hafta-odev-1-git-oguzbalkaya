@@ -1,58 +1,90 @@
-[![Linux][#linux]][@linux] [![Bash][#bash]][@bash] [![Git][#git]][@git] [![VirtualBox][#virtualbox]][@virtualbox] [![Vagrant][#vagrant]][@vagrant]
+
+# Protein DevOps Engineer Bootcamp
+
+A developer wants a script to build only a specific branch of the project.
+
+- The name of the branch that will build must be given.If current branch is not that branch, change the branch.
+- If name of the branch is main or master, warn the user and build the application.
+- The user should be able to create a branch thanks to the script.
+- The user should be able to specify the debug mode.If the user doesn't want to specify, default value must be false.
+- The user should be able to choose the compression type.It can be tar.gz or zip.If the user doesn't want to choose, default value must be false.
+- The user should be able to choose the directory to move the files to.If the user doesn't want to choose, default value must be current directory.
 
 
+## Files
 
-### 2.Hafta 1.Odev
----
+#### build.sh
+Main script file.
 
-## Table of contents[![](./docs/img/pin.svg)](#table-of-contents)
+#### build.conf
+Configuration file.It contains a list of names of important branches and draft of the build command.
 
-1. [Aciklama](#aciklama)
-2. [Not](#not)
-3. [Usage](#usage)
+## Usage
 
----
-
-#### Aciklama: [![](./docs/img/pin.svg)](#aciklama)
-
-Developer projesinin sadece belirli bir branch'ini derlemek icin yardimci bir script istemektedir. Bu script'i asagidaki ozellikleri saglayacak sekilde bash script ile kodlayiniz. 
-
-1. Kullanici build istedigi branch ismini vermeli ve o anda o branch uzerinde degilse o branch'e gecmeli ve o sekilde build islemi baslamalidir.
-2. Kullanici main ve ya master branch'ini derlemek istediginde ekrana bu bir uyari (WARNING) cikmali, `su an master ve ya main branch'ini build ediyorsunuz !!!` diye.
-3. Kullanici bu script yardimiyla yeni bir branch olusturabilmeli ayni zamanda.
-3. Build islemi sirasinda DEBUG modunun acik olup olmayacagi kullanicidan alinmali. Eger kullanici belirtmeyi tercih etmiyorsa default olarak DEBUG mod kapali gelmeli.
-4. Kullanici build islemi bittikten sonra cikan artifact'lerin hangi formatta compress edilecegini secebilmeli, kullaniciya iki secenek sunulmali `zip` ve ya `tar.gz ` . Bu iki compress formatindan baska bir format verilmisse build islemi baslamamali, script kirilmalidir. (Not: artifact ismi branch_name.tar.gz ve branch_name.zip formatinda olmali, yani o an uzerinde calisilan branch'in ismi o compress edilen dosyanin ismi olmalidir.)
-5. Compress edilen artifact'lerin hangi dizine tasinacagi kullanicidan alinmalidir.
+`Note that, target directory means a directory that contains jar files which created by maven.`
 
 
+ `-b <branch_name>`    Branch name(default=current branch)
 
+ `-n <new_branch>`     Create a new branch
 
-`Kullanici`: Bu build scriptini kullanan yazilimci, developer, gelistirici.
+ `-f <zip|tar>`        Compression format.tar=tar.gz, zip=zip.(default=tar)
+ 
+ `-p <artifact_path>`  Copy artifact to specific path(default=current directory)
 
----
+ `-d <false|true>`     Debug mode(default=false)
 
-#### Not: [![](./docs/img/pin.svg)](#not)
+ `-s <false|true>`     Skip test(default=false)
 
-- Burada verilen proje `Java Spring Boot` ile yazilmistir ve `Maven` paket yoneticisi ile yonetilmektedir. Build scriptini bunu dikkate alarak yaziniz.
-- Burada verilen projeden farkli bir projede kullanilabilir. Ornegin bir `NodeJS` uygulamasi ve paket yonetimi icin `npm` kullanabilirsiniz. 
+ `-r <false|true>`     Remove target directory after compressing.
 
----
+ 
+Show help page.
 
-
-#### Example Usage: [![](./docs/img/pin.svg)](#usage)
-
-```shell
-
-$ build.sh --help
-
-Usage:
-    -b  <branch_name>     Branch name
-    -n  <new_branch>      Create new branch
-    -f  <zip|tar>         Compress format
-    -p  <artifact_path>   Copy artifact to spesific path
-
-
-
+```bash
+  ./build.sh --help
 ```
 
+Create a new branch.
+
+```bash
+  ./build.sh -n branch_name
+```
+
+Build with default values.
+
+```bash
+  ./build.sh
+```
+
+Compression format is zip, branch name is main and debug mode is active.
+
+```bash
+  ./build.sh -f tar -b main -d true
+```
+
+Compression format is zip, branch name is mybranch, debug mode is not active and skip all tests.
+
+```bash
+  ./build.sh -f zip -b mybranch -d false -s true 
+```
+
+Compression format is tar(default), artifact directory is /home/user/Desktop, delete target directory after compressing and skip all tests.
+
+```bash
+  ./build.sh -p /home/user/Desktop/ -s true -r true 
+```
+
+
+## Technologies
+
+- Linux
+- Bash Scripting
+- Git
+- Maven
+
+
+## License
+
+[GPL3](https://www.gnu.org/licenses/gpl-3.0.html)
 
