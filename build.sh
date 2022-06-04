@@ -1,6 +1,6 @@
 #! /bin/bash
 #########################
-## Author : Oguz BALKAYA
+## Author : Oguz BALKAYA <oguz.balkaya@gmail.com>
 ## Description : This script takes some parameters from the user and build the application. 
 ## Date : 02-06-2022
 ## Version : 1.0
