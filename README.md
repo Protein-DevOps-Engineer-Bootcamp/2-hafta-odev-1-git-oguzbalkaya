@@ -17,7 +17,7 @@ A developer wants a script to build only a specific branch of the project.
 Main script file.
 
 #### build.conf
-Configuration file.It contains a list of names of important branches and draft of the build command.
+Configuration file.It contains a list of names of important branches, draft of the build command and colors.
 
 ## Usage
 

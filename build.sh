@@ -47,7 +47,7 @@ check_compress_format(){
 	#This function checks compression format.It can be zip or tar.
 	if [[ "$1" != "tar" ]] && [[ "$1" != "zip" ]]
 	then
-		echo "Compress format(-f) must be tar or zip"
+		printf "${RED}[ERROR] Compress format(-f) must be tar or zip.${NC}\n"
 		exit 1
 	fi
 }
@@ -56,7 +56,7 @@ check_remove_target_dir(){
 	#This function checks -r flag.It can be true or false.
 	if [[ "$1" != "true" ]] && [[ "$1" != "false" ]]
 	then
-		echo "Remove target dir(-r) must be true or false"
+		printf "${RED}[ERROR] Remove target dir(-r) must be true or false.${NC}\n"
 		exit 1
 	fi
 }
@@ -65,7 +65,7 @@ check_debug_mode(){
 	#This function checks debug mode. It can be false or true.
 	if [[ "$1" != "false" ]] && [[ "$1" != "true" ]]
 	then
-		echo "Debug mode(-d) must be false or true"
+		printf "${RED}[ERROR] Debug mode(-d) must be false or true.${NF}\n"
 		exit 1
 	fi
 }
@@ -74,7 +74,7 @@ check_skip_test(){
 	#This function checks skip_test parameter.It can be false or true.
 	if [[ "$1" != "false" ]] && [[ "$1" != "true" ]]
 	then
-		echo "Skip test(-s) must be false or true"
+		printf "${RED}[ERROR] Skip test(-s) must be false or true.${NC}\n"
 		exit 1
 	fi
 }	
@@ -84,7 +84,7 @@ create_branch(){
 	standart_output=`git branch $1 2>&1`
 	if [[ $standart_output = "" ]]
 	then
-		echo "Branch \"$1\" created."
+		echo "[INFO] Branch \"$1\" created."
 	else
 		echo $standart_output
 	fi
@@ -98,7 +98,7 @@ check_branch_name(){
 	do
 		if [[ "$1" = "$i" ]]
 		then
-			echo "[WARNING] You are building $1 branch.."
+			printf "${YELLOW}[WARNING] You are building $1 branch..${NC}\n"
 		fi
 	done
 	
@@ -106,7 +106,7 @@ check_branch_name(){
 
 	if [[ "$?" = "0" ]]
 	then
-		echo "Branch \"$branch_name\" not found. Creating..."
+		printf "${YELLOW}[WARNING] Branch \"$branch_name\" not found. Creating...${NC}\n"
 		create_branch $branch_name
 	fi
 }
@@ -159,6 +159,7 @@ check(){
 	then
 		current_branch=`git branch | sed -n -e 's/^\* \(.*\)/\1/p'`
 		branch_name=$current_branch
+		check_branch_name $branch_name
 	else
         	check_branch_name $branch_name
 	fi
@@ -196,12 +197,18 @@ build(){
 	fi
 
 	#build the application with maven
-	echo "Build..."
+	echo "[INFO] Build..."	
 	eval "$BUILD_COMMAND"
-	echo "Build finished."
+	if [[ "$?" != "0" ]]
+	then
+		printf "${RED}[ERROR] Build error.${NC}\n"
+		exit 1
+	fi
+
+	echo "[INFO] Build finished."
 	
 	#If target directory was created, create archive file
-	echo "Compress..."
+	echo "[INFO] Compress..."
 	target_directory="$BASEDIR/target/"
 	if [[ -d "$target_directory" ]]
 	then
@@ -222,17 +229,17 @@ build(){
 			cd -
 			pwd
 		fi
-		echo "Archive created."
+		printf "${GREEN}[SUCCESS] Archive created.${NC}\n"
 
 		if [[ "$remove_target_dir" = "true" ]]
 		then
-			echo "Deleting the target directory..."
+			echo "[INFO] Deleting the target directory..."
 			rm -r $target_directory
-			echo "Deleted."
+			echo "[INFO] Deleted."
 		fi
 
 	else
-		echo "target directory not found."
+		printf "${RED}[ERROR] Target directory not found.${NC}\n"
 	fi
 	
 	
@@ -274,7 +281,7 @@ do
 			remove_target_dir=${OPTARG}
 			;;
 		?)
-			echo "Invalid parameter"
+			printf "${RED}[ERROR] Invalid parameter.${NC}\n"
 			usage
 	esac
 done
